@@ -36,4 +36,3 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         sendResponse({ pageTotal: total });
     }
 });
-t
