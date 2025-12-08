@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Binance - Binance Alpha Volume Calc",
+    "name": "Binance Alpha Volume Calc",
     "version": "1.0",
     "description": "Tính tổng USDT các lệnh MUA trong bảng có phân trang của Binance.",
     "permissions": [
