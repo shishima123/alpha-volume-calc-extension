@@ -21,8 +21,10 @@ function collectPageData() {
         const createdAt = timeCell ? timeCell.textContent.trim() : '';
         const createdDate = createdAt.slice(0, 10); // lấy phần YYYY-MM-DD
 
-        // ✅ Chỉ tính row của ngày hiện tại
+        // ✅ Chỉ tính row của ngày hiện tại và sau 7h sáng
         if (createdDate !== todayStr) return;
+        const createdHour = parseInt(createdAt.slice(11, 13), 10);
+        if (createdHour < 7) return;
 
         const typeCell = row.querySelector('td[aria-colindex="4"] div');     // Hướng (Mua/Bán)
         const statusCell = row.querySelector('td[aria-colindex="13"] div');  // Trạng thái (HTML mới)
