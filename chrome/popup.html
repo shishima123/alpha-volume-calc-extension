@@ -8,12 +8,76 @@
 </head>
 
 <body>
-    <h1>Tính toán Binance Alpha Volume 💰</h1>
-    <button id="collect">➕ Cộng dồn trang hiện tại</button>
-    <button id="showTotal">📊 Xem tổng</button>
-    <button id="reset">🧹 Reset</button>
+    <div class="header">
+        <h1>Alpha Volume Calc</h1>
+    </div>
 
-    <div id="output"></div>
+    <div class="controls">
+        <button id="collect">Collect</button>
+        <button id="reset" class="btn-reset">Reset</button>
+    </div>
+
+    <div class="card">
+        <div class="vol-display">
+            <span class="vol-label">Vol hiện tại</span>
+            <span id="volCurrent" class="vol-value">0</span>
+        </div>
+        <div id="lastCollected" class="last-collected"></div>
+    </div>
+
+    <div class="card">
+        <table class="config-table">
+            <tr>
+                <td class="td-label">Volume mỗi lệnh</td>
+                <td class="td-value">
+                    <select id="selectVolume">
+                        <option value="128">128</option>
+                        <option value="256">256</option>
+                        <option value="512">512</option>
+                        <option value="1024" selected>1,024</option>
+                        <option value="2048">2,048</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="td-label">Điểm mục tiêu</td>
+                <td class="td-value">
+                    <select id="selectPoint">
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16" selected>16</option>
+                        <option value="17">17</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="card result-card">
+        <table class="result-table">
+            <tr>
+                <td class="td-label">Điểm hiện tại</td>
+                <td class="td-result"><span id="currentPoint" class="badge badge-blue">0</span></td>
+            </tr>
+            <tr>
+                <td class="td-label">Số lần đã trade</td>
+                <td class="td-result"><span id="tradeCount">0</span></td>
+            </tr>
+            <tr class="separator"></tr>
+            <tr>
+                <td class="td-label">Vol còn thiếu</td>
+                <td class="td-result"><span id="volRemaining" class="text-danger">0</span></td>
+            </tr>
+            <tr>
+                <td class="td-label">Vol gốc cần trade</td>
+                <td class="td-result"><span id="volBaseNeeded" class="text-success">0</span></td>
+            </tr>
+            <tr>
+                <td class="td-label">Số lần còn lại</td>
+                <td class="td-result"><span id="tradesRemaining">0</span></td>
+            </tr>
+        </table>
+    </div>
 
     <script src="popup.js"></script>
 </body>

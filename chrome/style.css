@@ -1,40 +1,192 @@
-body {
-  min-width: 250px;
-  font-family: sans-serif;
-  padding: 10px;
-  background: #f9fafb;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-h1 {
-  font-size: 16px;
+body {
+  width: 300px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f5f6fa;
+  color: #333;
+}
+
+.header {
+  background: linear-gradient(135deg, #f0b90b, #d4a20a);
+  padding: 12px 16px;
+}
+
+.header h1 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
   text-align: center;
-  margin-bottom: 10px;
+  letter-spacing: 0.3px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px 6px;
 }
 
 button {
-  display: block;
-  width: 100%;
-  margin-bottom: 6px;
-  padding: 8px;
-  font-size: 14px;
+  flex: 1;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
   border: none;
-  background: #f0b90b;
-  color: #000;
+  border-radius: 6px;
   cursor: pointer;
-  border-radius: 4px;
-  font-weight: bold;
+  transition: opacity 0.15s;
 }
 
 button:hover {
-  background: #e5a90a;
+  opacity: 0.85;
 }
 
-#output {
-  margin-top: 10px;
-  white-space: pre-wrap;
-  font-size: 14px;
+button#collect {
+  background: #f0b90b;
+  color: #fff;
+}
+
+button.btn-reset {
+  background: #e8e8e8;
+  color: #555;
+}
+
+.card {
+  margin: 6px 12px;
   background: #fff;
-  padding: 8px;
-  border-radius: 4px;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  overflow: hidden;
+}
+
+/* Vol display */
+.vol-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+}
+
+.vol-label {
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.vol-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #f0b90b;
+}
+
+.last-collected {
+  padding: 0 14px 8px;
+  font-size: 11px;
+  color: #aaa;
+  text-align: right;
+}
+
+.last-collected:empty {
+  display: none;
+}
+
+/* Config table */
+.config-table,
+.result-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.config-table tr + tr,
+.result-table tr + tr {
+  border-top: 1px solid #f0f0f0;
+}
+
+.td-label {
+  padding: 9px 14px;
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+}
+
+.td-value,
+.td-result {
+  padding: 9px 14px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: #f5f6fa url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 8px center;
   border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 24px 5px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+}
+
+select:focus {
+  border-color: #f0b90b;
+}
+
+/* Result card */
+.result-card {
+  border-color: #e0e7ef;
+  background: #fafbfd;
+  margin-bottom: 12px;
+}
+
+tr.separator {
+  height: 1px;
+  background: #e0e7ef;
+}
+
+tr.separator td {
+  padding: 0;
+}
+
+.text-danger {
+  color: #e74c3c;
+}
+
+.text-success {
+  color: #27ae60;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.badge-blue {
+  background: #e8f0fe;
+  color: #1a73e8;
+}
+
+.badge-orange {
+  background: #fff3e0;
+  color: #e67e22;
+}
+
+.badge-green {
+  background: #e6f9ee;
+  color: #27ae60;
+}
+
+.badge-red {
+  background: #fdeaea;
+  color: #e74c3c;
 }
