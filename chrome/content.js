@@ -34,8 +34,8 @@ function collectPageData() {
         const statusText = statusCell ? statusCell.textContent.trim() : '';
         const amountText = amountCell ? amountCell.textContent.trim() : '';
 
-        // Lọc điều kiện: Mua và Đã khớp
-        if (typeText === 'Mua' && statusText === 'Đã khớp') {
+        // Lọc điều kiện: Mua và (Đã khớp HOẶC Đã hủy nhưng khớp 1 phần có Tổng > 0)
+        if (typeText === 'Mua' && (statusText === 'Đã khớp' || statusText === 'Đã hủy')) {
             // "1.024,94797 USDT" -> "1024.94797"
             const normalized = amountText
                 .replace(/\s*USDT\s*/i, '')
@@ -43,8 +43,7 @@ function collectPageData() {
                 .replace(/,/g, '.');
 
             const num = parseFloat(normalized);
-            if (!isNaN(num)) pageTotal += num * 4; // ✅ Nhân 4
-            else console.warn('Không parse được số:', amountText);
+            if (!isNaN(num) && num > 0) pageTotal += num * 4; // ✅ Nhân 4, chỉ tính khi Tổng > 0
         }
     });
 
