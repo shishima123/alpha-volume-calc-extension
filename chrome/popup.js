@@ -20,7 +20,7 @@ function calculatePoints(totalVolume) {
     return Math.floor(Math.log2(totalVolume));
 }
 
-function showLastCollected(timestamp) {
+function showLastCollected(timestamp, isCached) {
     if (!timestamp) {
         lastCollectedEl.textContent = '';
         return;
@@ -28,7 +28,8 @@ function showLastCollected(timestamp) {
     const d = new Date(timestamp);
     const time = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     const date = d.toLocaleDateString('vi-VN');
-    lastCollectedEl.textContent = `Cập nhật lúc ${time} - ${date}`;
+    const prefix = isCached ? '(dữ liệu cũ) ' : '';
+    lastCollectedEl.textContent = `${prefix}Cập nhật lúc ${time} - ${date}`;
 }
 
 function updateDisplay(total) {
@@ -63,7 +64,7 @@ async function init() {
     if (data.selectedVolume) selectVolume.value = data.selectedVolume;
     if (data.selectedPoint) selectPoint.value = data.selectedPoint;
     updateDisplay(total);
-    showLastCollected(data.lastCollectedAt);
+    showLastCollected(data.lastCollectedAt, true);
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -85,18 +86,21 @@ collectBtn.addEventListener('click', async () => {
 
     chrome.tabs.sendMessage(tab.id, { type: 'COLLECT_PAGE' }, async (response) => {
         if (!response) {
-            volCurrentEl.textContent = 'Error';
+            alert('Không tìm thấy bảng lịch sử đặt lệnh.\nHãy mở tab "Lịch sử đặt lệnh" trên trang Binance Alpha trước.');
+            return;
+        }
+
+        if (response.error) {
+            alert(response.error);
             return;
         }
 
         const { pageTotal } = response;
-        const { total = 0 } = await chrome.storage.local.get('total');
-        const newTotal = total + pageTotal;
         const now = Date.now();
 
-        await chrome.storage.local.set({ total: newTotal, lastCollectedAt: now });
-        updateDisplay(newTotal);
-        showLastCollected(now);
+        await chrome.storage.local.set({ total: pageTotal, lastCollectedAt: now });
+        updateDisplay(pageTotal);
+        showLastCollected(now, false);
     });
 });
 

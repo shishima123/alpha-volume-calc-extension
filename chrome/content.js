@@ -1,7 +1,11 @@
 function collectPageData() {
+    const historyEl = document.querySelector('#trd-order-history');
+    if (!historyEl) {
+        return { error: true };
+    }
+
     let pageTotal = 0;
 
-    // YYYY-MM-DD theo local time
     const todayStr = (() => {
         const d = new Date();
         const y = d.getFullYear();
@@ -10,7 +14,6 @@ function collectPageData() {
         return `${y}-${m}-${day}`;
     })();
 
-    // Lấy tất cả hàng dữ liệu trong tbody (chỉ row thật)
     const rows = document.querySelectorAll(
         '#trd-order-history tbody.bn-web-table-tbody tr[role="row"]'
     );
@@ -47,12 +50,16 @@ function collectPageData() {
         }
     });
 
-    return pageTotal;
+    return { pageTotal: pageTotal };
 }
 
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.type === 'COLLECT_PAGE') {
-        const total = collectPageData();
-        sendResponse({ pageTotal: total });
+        const result = collectPageData();
+        if (result.error) {
+            sendResponse({ error: 'Không tìm thấy bảng lịch sử đặt lệnh.\nHãy mở tab "Lịch sử đặt lệnh" trên trang Binance Alpha trước.' });
+        } else {
+            sendResponse(result);
+        }
     }
 });
