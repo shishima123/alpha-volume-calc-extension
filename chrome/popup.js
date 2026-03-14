@@ -60,11 +60,21 @@ function updateDisplay(total) {
 // Load saved state
 async function init() {
     const data = await chrome.storage.local.get(['total', 'selectedVolume', 'selectedPoint', 'lastCollectedAt']);
-    const total = data.total || 0;
     if (data.selectedVolume) selectVolume.value = data.selectedVolume;
     if (data.selectedPoint) selectPoint.value = data.selectedPoint;
-    updateDisplay(total);
-    showLastCollected(data.lastCollectedAt, true);
+
+    // Chỉ giữ dữ liệu cũ nếu cùng ngày
+    const today = new Date().toLocaleDateString('vi-VN');
+    const savedDay = data.lastCollectedAt ? new Date(data.lastCollectedAt).toLocaleDateString('vi-VN') : null;
+
+    if (savedDay && savedDay === today) {
+        updateDisplay(data.total || 0);
+        showLastCollected(data.lastCollectedAt, true);
+    } else {
+        await chrome.storage.local.remove(['total', 'lastCollectedAt']);
+        updateDisplay(0);
+        showLastCollected(null);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);
