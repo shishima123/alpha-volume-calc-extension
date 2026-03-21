@@ -1,5 +1,4 @@
 const collectBtn = document.getElementById('collect');
-const resetBtn = document.getElementById('reset');
 const selectVolume = document.getElementById('selectVolume');
 const selectPoint = document.getElementById('selectPoint');
 
@@ -114,8 +113,3 @@ collectBtn.addEventListener('click', async () => {
     });
 });
 
-resetBtn.addEventListener('click', async () => {
-    await chrome.storage.local.remove(['total', 'lastCollectedAt']);
-    updateDisplay(0);
-    showLastCollected(null);
-});
