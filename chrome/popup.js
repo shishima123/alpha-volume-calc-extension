@@ -4,6 +4,7 @@ const selectPoint = document.getElementById('selectPoint');
 
 const volCurrentEl = document.getElementById('volCurrent');
 const currentPointEl = document.getElementById('currentPoint');
+const currentPointRowEl = document.getElementById('currentPointRow');
 const tradeCountEl = document.getElementById('tradeCount');
 const volRemainingEl = document.getElementById('volRemaining');
 const volBaseNeededEl = document.getElementById('volBaseNeeded');
@@ -39,8 +40,10 @@ function updateDisplay(total) {
     volCurrentEl.textContent = formatNumber(Math.round(total));
 
     const currentPt = calculatePoints(total);
-    currentPointEl.textContent = currentPt;
-    currentPointEl.className = currentPt >= targetPoint ? 'badge badge-green' : 'badge badge-red';
+    const achieved = currentPt >= targetPoint;
+    currentPointEl.textContent = achieved ? `✓ ${currentPt}` : currentPt;
+    currentPointEl.className = achieved ? 'badge badge-green badge-pulse' : 'badge badge-red';
+    currentPointRowEl.classList.toggle('row-achieved', achieved);
 
     const volPerTrade = volumePerOrder * 4;
     const trades = Math.floor(total / volPerTrade);
