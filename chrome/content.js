@@ -39,11 +39,13 @@ function collectPageData() {
 
         // Lọc điều kiện: Mua và (Đã khớp HOẶC Đã hủy nhưng khớp 1 phần có Tổng > 0)
         if (typeText === 'Mua' && (statusText === 'Đã khớp' || statusText === 'Đã hủy')) {
-            // "1.024,94797 USDT" -> "1024.94797"
-            const normalized = amountText
-                .replace(/\s*USDT\s*/i, '')
-                .replace(/\./g, '')
-                .replace(/,/g, '.');
+            // USDT mới dùng dấu chấm thập phân; vẫn hỗ trợ "1.024,94797 USDT".
+            let normalized = amountText.replace(/\s*USDT\s*/i, '').trim();
+            if (normalized.lastIndexOf(',') > normalized.lastIndexOf('.')) {
+                normalized = normalized.replace(/\./g, '').replace(/,/g, '.');
+            } else {
+                normalized = normalized.replace(/,/g, '');
+            }
 
             const num = parseFloat(normalized);
             if (!isNaN(num) && num > 0) pageTotal += num * 4; // ✅ Nhân 4, chỉ tính khi Tổng > 0
