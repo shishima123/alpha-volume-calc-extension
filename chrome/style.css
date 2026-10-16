@@ -134,6 +134,17 @@ select:focus {
   border-color: #f0b90b;
 }
 
+.collect-status {
+  margin: 6px 12px;
+  color: #e74c3c;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.collect-status:empty {
+  display: none;
+}
+
 /* Result card */
 .result-card {
   border-color: #e0e7ef;

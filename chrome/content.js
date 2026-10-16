@@ -4,7 +4,8 @@ function collectPageData() {
         return { error: true };
     }
 
-    let pageTotal = 0;
+    let buyTotal = 0;
+    let sellTotal = 0;
 
     const todayStr = (() => {
         const d = new Date();
@@ -27,7 +28,7 @@ function collectPageData() {
         // ✅ Chỉ tính row của ngày hiện tại và sau 7h sáng
         if (createdDate !== todayStr) return;
         const createdHour = parseInt(createdAt.slice(11, 13), 10);
-        if (createdHour < 7) return;
+        if (!Number.isFinite(createdHour) || createdHour < 7) return;
 
         const typeCell = row.querySelector('td[aria-colindex="4"] div');     // Hướng (Mua/Bán)
         const statusCell = row.querySelector('td[aria-colindex="13"] div');  // Trạng thái (HTML mới)
@@ -37,8 +38,10 @@ function collectPageData() {
         const statusText = statusCell ? statusCell.textContent.trim() : '';
         const amountText = amountCell ? amountCell.textContent.trim() : '';
 
-        // Lọc điều kiện: Mua và (Đã khớp HOẶC Đã hủy nhưng khớp 1 phần có Tổng > 0)
-        if (typeText === 'Mua' && (statusText === 'Đã khớp' || statusText === 'Đã hủy')) {
+        // Chỉ tính phần đã giao dịch của lệnh mua/bán bằng USDT.
+        if ((typeText === 'Mua' || typeText === 'Bán') &&
+            (statusText === 'Đã khớp' || statusText === 'Đã hủy') &&
+            /\sUSDT\s*$/i.test(amountText)) {
             // USDT mới dùng dấu chấm thập phân; vẫn hỗ trợ "1.024,94797 USDT".
             let normalized = amountText.replace(/\s*USDT\s*/i, '').trim();
             if (normalized.lastIndexOf(',') > normalized.lastIndexOf('.')) {
@@ -48,20 +51,13 @@ function collectPageData() {
             }
 
             const num = parseFloat(normalized);
-            if (!isNaN(num) && num > 0) pageTotal += num * 4; // ✅ Nhân 4, chỉ tính khi Tổng > 0
+            if (Number.isFinite(num) && num > 0) {
+                if (typeText === 'Mua') buyTotal += num;
+                else sellTotal += num;
+            }
         }
     });
 
-    return { pageTotal: pageTotal };
+    // Volume tính điểm nhân 4; tổng mua/bán dùng giá trị gốc.
+    return { pageTotal: buyTotal * 4, tradeTotals: { buyTotal, sellTotal } };
 }
-
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-    if (msg.type === 'COLLECT_PAGE') {
-        const result = collectPageData();
-        if (result.error) {
-            sendResponse({ error: 'Không tìm thấy bảng lịch sử đặt lệnh.\nHãy mở tab "Lịch sử đặt lệnh" trên trang Binance Alpha trước.' });
-        } else {
-            sendResponse(result);
-        }
-    }
-});
